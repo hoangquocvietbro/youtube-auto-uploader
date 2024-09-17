@@ -11,7 +11,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 import pprint
 from dotenv import load_dotenv
-
+import google_colab_selenium as gs
+from selenium.webdriver.chrome.options import Options
 video_dir_path = f''
 
 
@@ -68,7 +69,7 @@ def youtube_login(browser, username, password):
         print(f"After password input, URL: {browser.current_url}")
 
         # 로그인 완료 대기
-        WebDriverWait(browser, 30).until(EC.presence_of_element_located((By.ID, "avatar-btn")))
+        WebDriverWait(browser, 300).until(EC.presence_of_element_located((By.ID, "avatar-btn")))
 
         print(f"Login complete, final URL: {browser.current_url}")
 
@@ -283,16 +284,23 @@ def upload_and_monitor(browser, video_dir_paths, status_file, retry_delay=3600):
 
 def run():
     load_dotenv()
-    id = os.getenv('id')
-    pw = os.getenv('password')
+    id = 'hoangquocviettech'
+    pw = 'Viet@02112001#'
     chromedriver_autoinstaller.install()
     pprint.pprint(chromedriver_autoinstaller.get_chrome_version())
     options = webdriver.ChromeOptions()
+    # Add extra options
+    options.add_argument("--window-size=1920,1080")  # Set the window size
+    options.add_argument("--disable-infobars")  # Disable the infobars
+    options.add_argument("--disable-popup-blocking")  # Disable pop-ups
+    options.add_argument("--ignore-certificate-errors")  # Ignore certificate errors
+    options.add_argument("--incognito")  # Use Chrome in incognito mode
+    options.add_argument("--disable-blink-features=AutomationControlled") 
 
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     options.add_experimental_option('detach', True)
     options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36')
-    browser = webdriver.Chrome(options=options)
+    browser = gs.Chrome(options=options)
 
     youtube_login(browser, id, pw)
     upload_and_monitor(browser, get_upload_list(), 'upload_status.json')
