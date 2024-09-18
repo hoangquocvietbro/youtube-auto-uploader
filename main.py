@@ -285,7 +285,7 @@ def upload_and_monitor(browser, video_dir_paths, status_file, retry_delay=3600):
 def run():
     load_dotenv()
     id = 'hoangqviey'
-    pw = 'Viet02112001'
+    pw = ''
     chromedriver_autoinstaller.install()
     pprint.pprint(chromedriver_autoinstaller.get_chrome_version())
     options = webdriver.ChromeOptions()
